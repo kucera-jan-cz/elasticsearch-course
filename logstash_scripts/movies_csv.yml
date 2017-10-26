@@ -1,0 +1,33 @@
+input {
+    file {
+    path => "/tmp/ml-latest-small/head_movies.csv"
+    start_position => "beginning"
+    sincedb_path => "/dev/null"
+    }
+}
+filter {
+  csv {
+    #autodetect_column_names => true
+    columns => ["movieId", "title", "genres" ]
+    separator => ","   
+  }
+  grok {
+    match => { "title" => "(\")?(?<title>.+)\((?<year>\d{4})\)(\")?$" }
+    overwrite => [ "title" ]
+  }
+  mutate {
+    split => { "genres" => "|" }
+    remove_field => [ "host", "message", "path" ]
+    convert => { 
+        "year" => "integer"
+        "movieId" => "integer"
+    }
+  }
+}
+output {
+  #stdout { codec => json }
+  elasticsearch { 
+    hosts => ["localhost:9200"]
+    index => movies
+  }
+}

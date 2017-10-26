@@ -1,0 +1,10 @@
+actions:
+  1:
+    action: alias
+    options:
+        name: my_movies
+    add:
+        filters:
+        - filtertype: pattern
+          kind: prefix
+          value: movies-

@@ -1,0 +1,48 @@
+
+#Elasticsearch
+echo 'network.host: [_site_, _local_]' >> /etc/elasticsearch/elasticsearch.yml
+echo 'node.name: node-1' >> /etc/elasticsearch/elasticsearch.yml
+
+
+network.host: [_site_, _local_]
+curl -XGET 192.168.1.104:9200 
+curl -XGET localhost:9200 
+
+
+#Kibana
+echo "server.host: \"192.168.1.104\"" >> /etc/kibana/kibana.yml
+
+server.host: "192.168.1.104"
+curl -XGET 192.168.1.104:5601
+
+#Cerebro
+cd /opt
+wget --no-check-certificate https://github.com/lmenezes/cerebro/releases/download/v0.7.1/cerebro-0.7.1.tgz
+tar -xvf cerebro-0.7.1.tgz
+ln -s cerebro-0.7.1 cerebro
+#copy cerebro to /etc/init.d/
+sed -i "s/^pidfile.path.*/pidfile.path=\"\/var\/run\/cerebro.pid\"/g" /opt/cerebro/conf/application.conf
+
+
+elasticsearch
+/user/share/elasticsearch/bin/elasticsearch "-d -Edefault.path.logs=$LOG_DIR -Edefault.path.data=$DATA_DIR -Edefault.path.conf=$CONF_DIR"
+
+
+runuser -l elasticsearch -c '/usr/share/elasticsearch/bin/elasticsearch -d -Edefault.path.logs=/var/log/elasticsearch-02 -Edefault.path.data=/var/lib/elasticsearch-02 -Edefault.path.conf=/etc/elasticsearch-02'
+
+sudo -u elasticsearch -i bash -c '/usr/share/elasticsearch/bin/elasticsearch -d -Edefault.path.logs=/var/log/elasticsearch-02 -Edefault.path.data=/var/lib/elasticsearch-02 -Edefault.path.conf=/etc/elasticsearch-02'
+
+#Another elastic
+sudo -u elasticsearch bash
+/usr/share/elasticsearch/bin/elasticsearch -Edefault.path.logs=/var/log/elasticsearch-02 -Edefault.path.data=/var/lib/elasticsearch-02 -Edefault.path.conf=/etc/elasticsearch-02
+
+Logstash:
+cd /usr/share/logstash/
+bin/logstash -f /tmp/movies.yml
+
+sudo -H -u elasticsearch bash -c 'echo "I am $USER, with uid $UID"'
+
+
+/usr/share/logstash/bin/logstash -f /tmp/movies.yml
+curator --config /etc/curator/curator.yml delete_movies_indices.yml
+curator --config /etc/curator/curator.yml alias_movies_indices.yml

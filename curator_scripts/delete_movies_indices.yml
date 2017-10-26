@@ -1,0 +1,7 @@
+actions:
+  1:
+    action: delete_indices
+    filters:
+    - filtertype: pattern
+      kind: prefix
+      value: movies-

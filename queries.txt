@@ -1,0 +1,13 @@
+//Bulk
+POST data/data/_bulk?pretty
+{"index": {"_id": "1"}}
+{"name" : "ID1"}
+{"index": {"_id": "2"}}
+{"name" : "ID2"}
+
+POST data/_bulk?pretty
+{"index" : {"_type":"data"}}
+{"name" : "ID3", "year": 2000}
+{"index" : {"_type":"data"}}
+{"name" : "ID4", "year": 2010}
+
