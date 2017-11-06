@@ -1,0 +1,61 @@
+PUT /author
+{
+  "mappings": {
+    "book": {
+      "_all": {
+        "enabled": false
+      },
+      "_parent": {
+        "type": "author"
+      },
+      "properties": {
+        "name": {
+          "type": "text"
+        },
+        "year": {
+          "type": "integer"
+        }
+      }
+    },
+    "author": {
+      "_all": {
+        "enabled": false
+      },
+      "properties": {
+        "author_name": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}
+
+GET _cat/indices
+
+POST /author/author/_bulk?pretty
+{"index": {"_id" : "1"}}
+{"author_name" : "Frank Herbert"}
+{"index": {"_id" : "2"}}
+{"author_name" : "Karel Capek"}
+
+POST /author/book/_bulk?pretty
+{"index" : {"_id": "1", "_parent" : "2"}}
+{"name": "RUR", "year" : 1921}
+{"index" : {"_id": "2", "_parent" : "2"}}
+{"name": "Valka s mloky", "year" : 1936}
+{"index" : {"_id": "3", "_parent" : "1"}}
+{"name": "Dune", "year" : 1965}
+
+GET /author/book/_search
+{
+  "query": {
+    "has_parent": {
+      "parent_type": "author",
+      "query": {
+        "term": {
+          "_id": "2"
+        }
+      }
+    }
+  }
+}

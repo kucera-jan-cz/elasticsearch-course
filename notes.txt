@@ -2,6 +2,7 @@
 #Elasticsearch
 echo 'network.host: [_site_, _local_]' >> /etc/elasticsearch/elasticsearch.yml
 echo 'node.name: node-1' >> /etc/elasticsearch/elasticsearch.yml
+echo 'discovery.zen.ping.unicast.hosts: ["localhost: 9300"]' >> /etc/elasticsearch/elasticsearch.yml
 
 
 network.host: [_site_, _local_]
@@ -22,6 +23,8 @@ tar -xvf cerebro-0.7.1.tgz
 ln -s cerebro-0.7.1 cerebro
 #copy cerebro to /etc/init.d/
 sed -i "s/^pidfile.path.*/pidfile.path=\"\/var\/run\/cerebro.pid\"/g" /opt/cerebro/conf/application.conf
+useradd -r -U cerebro
+chown -R cerebro:cerebro /opt/cerebro
 
 
 elasticsearch
@@ -46,3 +49,12 @@ sudo -H -u elasticsearch bash -c 'echo "I am $USER, with uid $UID"'
 /usr/share/logstash/bin/logstash -f /tmp/movies.yml
 curator --config /etc/curator/curator.yml delete_movies_indices.yml
 curator --config /etc/curator/curator.yml alias_movies_indices.yml
+
+Grok:
+(?<log_time>\S+) \[(?<thread>\S+)\] (?<level>\S+)\s+(?<log>\S+) - (?<message>.*)
+
+
+./bin/logstash --path.settings=/etc/logstash -f /etc/logstash/sandbox/logback-filebeat.yml --config.reload.automatic
+./bin/filebeat -c logstash.yml -v -d "*" -e -path.config /etc/filebeat/
+
+curl -sL -w "%{http_code}\\n" " http://localhost:9200/_cluster/health?wait_for_status=yellow" -o /dev/null; echo $?

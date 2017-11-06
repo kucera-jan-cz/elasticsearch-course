@@ -1,0 +1,33 @@
+PUT cities
+{
+  "mappings": {
+    "data": {
+      "properties": {
+        "name": {
+          "type": "text",
+          "fields": {
+            "keyword": {
+              "type": "keyword"
+            }
+          }
+        },
+        "population": {
+          "type": "integer"
+        },
+        "path": {
+          "type": "keyword"
+        }
+      }
+    }
+  }
+}
+
+POST /cities/data/_bulk
+{"index": {"_id" : "1"}}
+{"name" : "Prague", "population" : 1000000, "path" : "/europe/czech_republic/prague"}
+{"index": {"_id" : "2"}}
+{"name" : "Paris", "population" : 2244000, "path" : "/europe/france/paris"}
+{"index": {"_id" : "3"}}
+{"name" : "San Antonio", "population" : 1500000, "path" : "/north_america/usa/san_antonio"}
+{"index": {"_id" : "4"}}
+{"name" : "San Francisco", "population" : 860000, "path" : "/north_america/usa/san_francisco"}

@@ -1,0 +1,31 @@
+//PUT /book
+{
+  "mappings": {
+    "book": {
+      "_all": {
+        "enabled": false
+      },
+      "properties": {
+        "name": {
+          "type": "text"
+        },
+        "year": {
+          "type": "integer"
+        }
+      }
+    },
+    "author": {
+      "_all": {
+        "enabled": false
+      },
+      "_parent": {
+        "type": "book"
+      },
+      "properties": {
+        "author_name": {
+          "type": "text"
+        }
+      }
+    }
+  }
+}

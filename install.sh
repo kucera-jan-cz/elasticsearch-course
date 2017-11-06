@@ -27,6 +27,8 @@ apt-get -y install curl
 apt-get -y install unzip
 apt-get -y install ntp
 apt-get -y install sudo
+apt-get -y install vim-pathogen
+apt-get -y install git-core
 
 #Kibana
 apt install -t stable kibana
@@ -42,6 +44,13 @@ apt-get -y install elasticsearch-curator
 
 ./bin/logstash -t /etc/logstash/conf.d/movies.yml
 
+
+mkdir -p ~/.vim/bundle
+
+
+mkdir -p ~/.vim/indent
+cd ~/.vim/indent
+wget https://gist.githubusercontent.com/iangreenleaf/871107/raw/2f4f41f67a6ea668bfa4cfa156cea2f4872e974c/yaml.vim
 
 #Rescue
 apt-get install --reinstall logstash
