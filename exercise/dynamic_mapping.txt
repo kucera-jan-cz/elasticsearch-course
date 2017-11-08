@@ -1,0 +1,33 @@
+PUT maptest
+{
+  "mappings": {
+    "template": {
+      "date_detection": true,
+      "numeric_detection": true,
+      "dynamic_templates": [
+        {
+          "name": {
+            "match_mapping_type": "string",
+            "match": "name*",
+            "mapping": {
+              "type": "text",
+              "fields": {
+                "keyword_full": {
+                  "type": "keyword"
+                }
+              }
+            }
+          }
+        },
+        {
+          "other": {
+            "match_mapping_type": "string",
+            "mapping": {
+              "type": "text"
+            }
+          }
+        }
+      ]
+    }
+  }
+}
