@@ -1,0 +1,43 @@
+PUT _template/default
+{
+  "template" : "*",
+  "order" : 0,
+  "settings": {
+    "number_of_shards": 1, 
+    "number_of_replicas": 0
+  }, 
+  "mappings": {
+    "data" : {
+      "properties": {
+        "name" : {"type": "text"}
+      }
+    }
+  }
+}
+
+PUT _template/error_01
+{
+  "template" : "errors__*_v01",
+  "order" : 1,
+  "settings": {
+    "number_of_replicas": 1
+  },
+  "mappings": {
+    "data" : {
+      "properties": {
+        "name" : {"type": "keyword"}
+      }
+    }
+  },
+  "aliases" : {
+    "errors" : {}
+  }
+}
+
+POST errors__2017-11-13_v01/data
+{
+  "name" : "err"
+}
+
+GET errors__2017-11-13_v01/_settings
+GET errors__2017-11-13_v01/_mapping

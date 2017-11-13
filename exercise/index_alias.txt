@@ -1,0 +1,51 @@
+POST test/data 
+{
+  "name" : "data"
+}
+
+POST other_test/data
+{
+  "name" : "other_data"
+}
+
+POST _aliases
+{
+  "actions": [
+    {
+      "add": {
+        "index": "test",
+        "alias": "test_a",
+        "index_routing": "a"
+      }
+    },
+    {
+      "add" : {
+        "index" : "other_test",
+        "alias": "test_b",
+        "index_routing": "b"
+      }
+    },
+    {
+      "add" : {
+        "index" : "test",
+        "alias": "test_b",
+        "index_routing": "c"
+      }
+    }
+  ]
+}
+
+POST test_a/data
+{
+  "name" : "data_a"
+}
+
+POST test_b/data
+{
+  "name" : "data_b"
+}
+
+GET test/_search
+GET other_test/_search
+
+DELETE test*,other*
